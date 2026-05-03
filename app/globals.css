@@ -9,10 +9,11 @@
 :root {
   --bg: #0a0a0a;
   --card-bg: #111111;
-  --text-primary: #e8e4df;
-  --text-secondary: #9a948c;
-  --text-muted: #5a5650;
-  --accent: #c4a882;
+  --text-primary: #ffffff;
+  --text: #ffffff;
+  --text-secondary: #d9d9d9;
+  --text-muted: #5a5a5a;
+  --accent: #fffebf;
   --border: #1e1e1e;
 }
 
@@ -24,7 +25,7 @@ html {
 body {
   background-color: var(--bg);
   color: var(--text-primary);
-  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -32,10 +33,10 @@ body {
 
 button {
   cursor: pointer;
-  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 input,
 textarea {
-  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

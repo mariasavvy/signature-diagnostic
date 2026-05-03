@@ -10,7 +10,9 @@
       "Bash(npx tsc *)",
       "Bash(npm run *)",
       "Bash(curl -s http://localhost:3001)",
-      "Bash(curl -s -X POST http://localhost:3001/api/send-result -H 'Content-Type: application/json' -d '{\"email\":\"test@test.com\",\"resultTitle\":\"Test\",\"resultBody\":\"<p>Test body</p>\",\"percentage\":0.5}')"
+      "Bash(curl -s -X POST http://localhost:3001/api/send-result -H 'Content-Type: application/json' -d '{\"email\":\"test@test.com\",\"resultTitle\":\"Test\",\"resultBody\":\"<p>Test body</p>\",\"percentage\":0.5}')",
+      "Bash(mkdir -p \"/Users/mariameermeier/Documents/claude savvy foundation/signature diagnostic/public\")",
+      "Bash(cp \"/Users/mariameermeier/Documents/claude savvy foundation/signature diagnostic/HTML/SAVVY-White.png\" \"/Users/mariameermeier/Documents/claude savvy foundation/signature diagnostic/public/savvy-logo.png\")"
     ]
   }
 }

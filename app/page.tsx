@@ -141,6 +141,24 @@ interface ResultData {
 
 type Screen = "intro" | "question" | "email" | "result";
 
+// ─── Shared footer ───────────────────────────────────────────────────────────
+
+function Footer() {
+  return (
+    <footer className={styles.footer}>
+      <a
+        href="https://savvy-foundation.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.footerLink}
+      >
+        savvy-foundation.com
+      </a>
+      {" · "}Strategic advisory · Building businesses from the Signature
+    </footer>
+  );
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -242,11 +260,12 @@ export default function Home() {
     return (
       <main className={`${styles.page} ${styles.centeredPage}`}>
         <div className={styles.container}>
-          <div className={styles.label}>The SAVVY Foundation</div>
+          <img src="/savvy-logo.png" alt="The SAVVY Foundation" className={styles.logo} />
+          <div className={styles.label}>The Signature Diagnostic</div>
           <h1 className={styles.heroTitle}>
-            The Signature
+            Where does your
             <br />
-            Diagnostic
+            business stand?
           </h1>
           <div className={styles.introText}>
             <p>
@@ -263,6 +282,7 @@ export default function Home() {
           <button className={styles.btn} onClick={startQuiz}>
             Begin
           </button>
+          <Footer />
         </div>
       </main>
     );
@@ -370,10 +390,11 @@ export default function Home() {
               setResult(computed);
               setScreen("result");
             }}
-            style={{ marginTop: "1rem" }}
+            style={{ marginTop: "1.5rem" }}
           >
             Skip — just show me the result
           </button>
+          <Footer />
         </div>
       </main>
     );
@@ -382,25 +403,19 @@ export default function Home() {
   // ─── Result ─────────────────────────────────────────────────────────────────
 
   if (screen === "result" && result) {
-    const segments = 20;
-    const filledSegments = Math.round(result.percentage * segments);
     const markerLeft = `${result.percentage * 100}%`;
 
     return (
       <main className={`${styles.page} ${styles.centeredPage}`}>
         <div className={styles.container}>
+          <img src="/savvy-logo.png" alt="The SAVVY Foundation" className={styles.logo} />
           <div className={styles.label}>Your result</div>
 
           <div className={styles.spectrumWrap}>
-            <div className={styles.spectrumBar}>
-              {Array.from({ length: segments }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`${styles.spectrumSegment} ${i < filledSegments ? styles.spectrumSegmentFilled : ""}`}
-                />
-              ))}
+            <div className={styles.spectrumTrack}>
+              <div className={styles.spectrumFill} style={{ width: `${result.percentage * 100}%` }} />
+              <div className={styles.spectrumMarker} style={{ left: markerLeft }} />
             </div>
-            <div className={styles.spectrumMarker} style={{ left: markerLeft }} />
             <div className={styles.spectrumLabels}>
               <span
                 className={`${styles.spectrumLabel} ${result.percentage < 0.4 ? styles.spectrumLabelActive : ""}`}
@@ -422,6 +437,7 @@ export default function Home() {
           />
 
           <div className={styles.resultCta}>
+            <div className={styles.ctaLabel}>What&rsquo;s next</div>
             <div className={styles.resultCtaIntro}>Two ways to keep thinking.</div>
             <div className={styles.ctaLinks}>
               <a className={styles.ctaLink} href="#">
@@ -434,6 +450,8 @@ export default function Home() {
               </a>
             </div>
           </div>
+
+          <Footer />
         </div>
       </main>
     );
