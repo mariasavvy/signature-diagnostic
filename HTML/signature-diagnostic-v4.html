@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Signature Diagnostic — The SAVVY Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #111111;
+    --bg-hover: #1a1a1a;
+    --text: #e8e4df;
+    --text-secondary: #9a948c;
+    --text-muted: #5a5650;
+    --accent: #c4a882;
+    --border: #1e1e1e;
+    --selected-border: #c4a882;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .screen {
+    display: none;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .screen.active { display: block; }
+  .screen.visible { opacity: 1; transform: translateY(0); }
+
+  .label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  .label-accent { color: var(--accent); }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3.5vw, 26px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--text);
+    margin-bottom: 32px;
+    letter-spacing: 0.005em;
+  }
+
+  .intro-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+    max-width: 540px;
+  }
+
+  .intro-text p { margin-bottom: 16px; }
+  .intro-text p:last-child { margin-bottom: 0; }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    padding: 16px 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  .btn:hover { opacity: 0.85; }
+
+  .btn:disabled {
+    background: var(--border);
+    color: var(--text-muted);
+    cursor: default;
+  }
+
+  .btn:disabled:hover { opacity: 1; }
+
+  .btn-secondary {
+    background: none;
+    color: var(--text-muted);
+    padding: 8px 0;
+    font-size: 13px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .btn-secondary:disabled { background: none; }
+  .btn-secondary:hover { color: var(--text); }
+
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .progress-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--text);
+    transition: width 0.5s ease;
+  }
+
+  .options { margin-bottom: 40px; }
+
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 18px 22px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .option:hover {
+    background: var(--bg-hover);
+    border-color: var(--text-muted);
+    color: var(--text);
+  }
+
+  .option.selected {
+    border-color: var(--selected-border);
+    color: var(--text);
+    background: var(--bg-hover);
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ─── Result ─── */
+  .result-spectrum {
+    position: relative;
+    margin-bottom: 56px;
+  }
+
+  .spectrum-bar {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 14px;
+  }
+
+  .spectrum-segment {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    transition: background 0.4s ease;
+  }
+
+  .spectrum-segment.filled { background: var(--accent); }
+
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .spectrum-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+  }
+
+  .spectrum-label.active { color: var(--accent); }
+
+  .spectrum-marker {
+    position: absolute;
+    top: -6px;
+    width: 2px;
+    height: 16px;
+    background: var(--text);
+    transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3.5vw, 28px);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .result-body {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+  }
+
+  .result-body p {
+    margin-bottom: 14px;
+  }
+
+  .result-body p:last-child { margin-bottom: 0; }
+
+  .result-cta {
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+  }
+
+  .result-cta-intro {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .cta-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .cta-link {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cta-link:first-child { border-top: 1px solid var(--border); }
+  .cta-link:hover { color: var(--text); }
+  .cta-link span { font-size: 16px; }
+
+  @media (max-width: 480px) {
+    .container { padding: 32px 20px; }
+    .option { padding: 16px 18px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ═══ INTRO ═══ -->
+  <div class="screen active" id="intro">
+    <div class="label">The SAVVY Foundation</div>
+    <h1>The Signature<br>Diagnostic</h1>
+    <div class="intro-text">
+      <p>Every founder's business sits somewhere on a spectrum. On one end: a service — selling time, capacity, execution. On the other: a Signature Business — selling a perspective so distinct it's economically irreplaceable.</p>
+      <p>Most businesses are somewhere in between. The interesting question isn't which end — it's how far along the shift has already happened, and where it stalls.</p>
+      <p>10 questions. 3 minutes. An honest read of where you stand.</p>
+    </div>
+    <button class="btn" onclick="startQuiz()">Begin</button>
+  </div>
+
+  <!-- ═══ QUESTION ═══ -->
+  <div class="screen" id="question">
+    <div class="progress-bar">
+      <div class="progress-count" id="progress-count">01 / 10</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width: 10%"></div>
+      </div>
+    </div>
+
+    <div class="label label-accent" id="block-label"></div>
+    <h2 id="question-text"></h2>
+
+    <div class="options" id="options"></div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" id="back-btn" onclick="goBack()">← Back</button>
+      <button class="btn" id="next-btn" onclick="goNext()" disabled>Continue</button>
+    </div>
+  </div>
+
+  <!-- ═══ RESULT ═══ -->
+  <div class="screen" id="result">
+    <div class="label">Your result</div>
+
+    <div class="result-spectrum" id="result-spectrum">
+      <div class="spectrum-bar" id="spectrum-bar"></div>
+      <div class="spectrum-marker" id="spectrum-marker"></div>
+      <div class="spectrum-labels">
+        <span class="spectrum-label" id="label-service">Service</span>
+        <span class="spectrum-label" id="label-signature">Signature</span>
+      </div>
+    </div>
+
+    <div class="result-title" id="result-title"></div>
+    <div class="result-body" id="result-body"></div>
+
+    <div class="result-cta">
+      <div class="result-cta-intro">Two ways to keep thinking.</div>
+      <div class="cta-links">
+        <a class="cta-link" href="#" onclick="return false;">
+          The Whitepaper — Building a Signature Business in 2026
+          <span>→</span>
+        </a>
+        <a class="cta-link" href="#" onclick="return false;">
+          A Working Session with Maria Meermeier
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    block: "Value",
+    question: "Your clients keep coming back because...",
+    options: [
+      { text: "You deliver reliably — on time, on brief, at a fair price.", score: 0 },
+      { text: "You bring depth and expertise that's hard to find elsewhere.", score: 1 },
+      { text: "You change how they think about the problem — not just how they solve it.", score: 2 }
+    ]
+  },
+  {
+    block: "Value",
+    question: "Your pricing reflects...",
+    options: [
+      { text: "Your time — hours, days, or retainers tied to availability.", score: 0 },
+      { text: "The scope of what you deliver, regardless of how long it takes.", score: 1 },
+      { text: "The weight of your judgement — what the decision is worth, not the hours behind it.", score: 2 }
+    ]
+  },
+  {
+    block: "Replaceability",
+    question: "If you stepped away tomorrow, your clients would...",
+    options: [
+      { text: "Find someone comparable within a week.", score: 0 },
+      { text: "Notice the quality gap — but eventually adjust.", score: 1 },
+      { text: "Struggle to describe what they'd even be looking for.", score: 2 }
+    ]
+  },
+  {
+    block: "Replaceability",
+    question: "As AI reshapes how work gets done, your business...",
+    options: [
+      { text: "Is already feeling the pressure — AI handles most of it.", score: 0 },
+      { text: "Loses some of the execution layer, but the thinking stays protected.", score: 1 },
+      { text: "Becomes more valuable — AI eliminates the commodity, not what makes you distinct.", score: 2 }
+    ]
+  },
+  {
+    block: "Conviction",
+    question: "When you look at how most people in your space operate...",
+    options: [
+      { text: "The approach is mostly sound — the challenge is doing it well.", score: 0 },
+      { text: "It's competent but predictable — better approaches exist.", score: 1 },
+      { text: "Something is fundamentally wrong — and most people don't see it.", score: 2 }
+    ]
+  },
+  {
+    block: "Conviction",
+    question: "People hire you because...",
+    options: [
+      { text: "You're available and reliable when they need capacity.", score: 0 },
+      { text: "You have a strong track record of delivering results.", score: 1 },
+      { text: "You see things they can't see on their own.", score: 2 }
+    ]
+  },
+  {
+    block: "Economics",
+    question: "The biggest constraint on your growth is...",
+    options: [
+      { text: "The number of hours in your day.", score: 0 },
+      { text: "The number of engagements you can run in parallel.", score: 1 },
+      { text: "That your most valuable thinking hasn't been turned into a scalable offer yet.", score: 2 }
+    ]
+  },
+  {
+    block: "Economics",
+    question: "When it comes to disagreeing publicly with the most established voice in your space...",
+    options: [
+      { text: "You'd rather not — they've earned their reputation.", score: 0 },
+      { text: "You disagree on specific points, not on the fundamentals.", score: 1 },
+      { text: "You already do — and the disagreement is precise, not performative.", score: 2 }
+    ]
+  },
+  {
+    block: "Compound",
+    question: "At the end of each year, your business...",
+    options: [
+      { text: "Resets — new clients, new pitches, same cycle.", score: 0 },
+      { text: "Carries some momentum, but growth is mostly linear.", score: 1 },
+      { text: "Compounds — reputation, IP, and positioning make each year stronger than the last.", score: 2 }
+    ]
+  },
+  {
+    block: "Compound",
+    question: "If you could put one sentence in front of your entire industry...",
+    options: [
+      { text: "\"Good work speaks for itself.\"", score: 0 },
+      { text: "\"There's a smarter way to do this.\"", score: 1 },
+      { text: "Something precise enough to split the room in half.", score: 2 }
+    ]
+  }
+];
+
+const results = [
+  {
+    min: 0,
+    max: 0.25,
+    title: "You're running a service — and you probably feel the ceiling.",
+    body: "<p>Right now, your business is built on your capacity. Your time, your availability, your ability to deliver what's been briefed. There's nothing wrong with that — but it means your revenue has a hard limit, and AI is entering exactly this territory.</p><p>A Signature Business works differently. It's built on what you see that others don't — a perspective sharp enough to create its own demand. The shift starts with one question: do you have a conviction about your space that goes beyond doing good work? If that question pulls at something, it's worth sitting with.</p>"
+  },
+  {
+    min: 0.25,
+    max: 0.45,
+    title: "There's expertise here — but the model still trades on time.",
+    body: "<p>You're clearly more than a pair of hands. Clients value what you bring — the quality, the thinking, the reliability. But the business model underneath still looks like a service: revenue is tied to your hours, growth means more projects, and each year largely starts from scratch.</p><p>The gap between what you know and what your business captures is real. Closing that gap doesn't start with a new offer or a higher price — it starts with identifying what you see differently than everyone else in your space, and whether that's sharp enough to build around.</p>"
+  },
+  {
+    min: 0.45,
+    max: 0.65,
+    title: "The expertise is strong. The conviction is forming.",
+    body: "<p>Clients don't just buy your execution — they buy how you think. You see things others miss, and you have opinions about your space that go beyond conventional wisdom. That's rare, and it's the raw material for a Signature Business.</p><p>But raw material isn't a business yet. The question is whether your model reflects the distinction you actually bring — whether your pricing carries the weight of your judgement, whether your positioning makes your perspective visible, and whether what you've built compounds over time or resets every year. That's where the interesting work starts.</p>"
+  },
+  {
+    min: 0.65,
+    max: 0.85,
+    title: "The signature is emerging — the business model may be lagging behind.",
+    body: "<p>Something is already there. You hold convictions that create friction. You see your space in ways that most of your peers don't, and clients come to you for how you think, not just what you deliver. Those are signature elements — and they're not easy to develop.</p><p>The harder question is whether your business carries the weight of that distinction. Pricing that reflects judgement, not hours. Offers that compound rather than reset. Positioning that makes your perspective the reason people seek you out. If there's a gap between what you see and what your business captures — that's not a problem. That's the leverage point.</p>"
+  },
+  {
+    min: 0.85,
+    max: 1.01,
+    title: "You're close — or already there.",
+    body: "<p>Your answers describe a business that's built on distinction, not capacity. Pricing tied to judgement, convictions that create friction, a compound effect where each year makes the next one stronger. That's the architecture of a Signature Business.</p><p>The question at this stage isn't whether the signature exists — it's whether the model is fully built around it. Whether every part of the business — the offers, the positioning, the way demand is generated — reflects how you actually think. Most founders at this point sense there's another level. They're usually right.</p>"
+  }
+];
+
+let currentQuestion = 0;
+let answers = new Array(questions.length).fill(null);
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active', 'visible');
+  });
+  const screen = document.getElementById(id);
+  screen.classList.add('active');
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      screen.classList.add('visible');
+    });
+  });
+}
+
+function startQuiz() {
+  currentQuestion = 0;
+  answers.fill(null);
+  renderQuestion();
+  showScreen('question');
+}
+
+function renderQuestion() {
+  const q = questions[currentQuestion];
+
+  document.getElementById('progress-count').textContent =
+    String(currentQuestion + 1).padStart(2, '0') + ' / ' + String(questions.length).padStart(2, '0');
+
+  document.getElementById('progress-fill').style.width =
+    ((currentQuestion + 1) / questions.length * 100) + '%';
+
+  const prevBlock = currentQuestion > 0 ? questions[currentQuestion - 1].block : null;
+  const blockLabel = document.getElementById('block-label');
+  if (q.block !== prevBlock) {
+    blockLabel.textContent = q.block;
+    blockLabel.style.display = 'block';
+  } else {
+    blockLabel.style.display = 'none';
+  }
+
+  document.getElementById('question-text').textContent = q.question;
+
+  const optionsEl = document.getElementById('options');
+  optionsEl.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option' + (answers[currentQuestion] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOption(i);
+    optionsEl.appendChild(btn);
+  });
+
+  document.getElementById('back-btn').disabled = currentQuestion === 0;
+  document.getElementById('back-btn').style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
+
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.disabled = answers[currentQuestion] === null;
+  nextBtn.textContent = currentQuestion === questions.length - 1 ? 'See Result' : 'Continue';
+}
+
+function selectOption(index) {
+  answers[currentQuestion] = index;
+
+  document.querySelectorAll('.option').forEach((opt, i) => {
+    opt.classList.toggle('selected', i === index);
+  });
+
+  document.getElementById('next-btn').disabled = false;
+}
+
+function goNext() {
+  if (answers[currentQuestion] === null) return;
+
+  if (currentQuestion < questions.length - 1) {
+    currentQuestion++;
+    renderQuestion();
+    const screen = document.getElementById('question');
+    screen.classList.remove('visible');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        screen.classList.add('visible');
+      });
+    });
+  } else {
+    showResult();
+  }
+}
+
+function goBack() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    renderQuestion();
+    const screen = document.getElementById('question');
+    screen.classList.remove('visible');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        screen.classList.add('visible');
+      });
+    });
+  }
+}
+
+function showResult() {
+  let totalScore = 0;
+  answers.forEach((answerIndex, qIndex) => {
+    totalScore += questions[qIndex].options[answerIndex].score;
+  });
+
+  const maxScore = questions.length * 2;
+  const percentage = totalScore / maxScore;
+
+  // Find matching result
+  let result = results[results.length - 1];
+  for (const r of results) {
+    if (percentage >= r.min && percentage < r.max) {
+      result = r;
+      break;
+    }
+  }
+
+  // Spectrum bar
+  const spectrumBar = document.getElementById('spectrum-bar');
+  const segments = 20;
+  const filledSegments = Math.round(percentage * segments);
+  let barHTML = '';
+  for (let i = 0; i < segments; i++) {
+    barHTML += '<div class="spectrum-segment' + (i < filledSegments ? ' filled' : '') + '"></div>';
+  }
+  spectrumBar.innerHTML = barHTML;
+
+  // Marker position
+  const marker = document.getElementById('spectrum-marker');
+  marker.style.left = (percentage * 100) + '%';
+
+  // Labels
+  document.getElementById('label-service').classList.toggle('active', percentage < 0.4);
+  document.getElementById('label-signature').classList.toggle('active', percentage >= 0.7);
+
+  document.getElementById('result-title').textContent = result.title;
+  document.getElementById('result-body').innerHTML = result.body;
+
+  showScreen('result');
+}
+
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    document.getElementById('intro').classList.add('visible');
+  });
+});
+</script>
+
+</body>
+</html>

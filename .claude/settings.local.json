@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(kill 48093 47365 46687 48955)",
+      "Bash(rm -rf \"/Users/mariameermeier/Documents/claude savvy foundation/signature diagnostic/node_modules\" \"/Users/mariameermeier/Documents/claude savvy foundation/signature diagnostic/package-lock.json\")",
+      "Bash(awk '{print $2}')",
+      "Bash(pkill -f \"npm install\")",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -s -X POST http://localhost:3001/api/send-result -H 'Content-Type: application/json' -d '{\"email\":\"test@test.com\",\"resultTitle\":\"Test\",\"resultBody\":\"<p>Test body</p>\",\"percentage\":0.5}')"
+    ]
+  }
+}
