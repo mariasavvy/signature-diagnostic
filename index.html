@@ -791,8 +791,12 @@ function submitEmail() {
     return;
   }
   collectedEmail = email;
-  // TODO: send email to your newsletter service here
-  console.log('Email collected:', email);
+  // Send to Formspree
+  fetch('https://formspree.io/f/xdabgrnn', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, source: 'signature-diagnostic' })
+  }).catch(() => {});
   showResult();
 }
 
