@@ -876,7 +876,7 @@ function showResult() {
 
   blockOrder.forEach(block => {
     const s = blockScores[block] || 0;
-    const m = blockMax[block] || 4;
+    const m = 4;
     const pct = Math.round((s / m) * 100);
 
     if (pct <= 50) weakBlocks.push(block);
