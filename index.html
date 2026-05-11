@@ -358,6 +358,7 @@
     left: 0; top: 0; height: 100%;
     transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
+  .category-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
   .category-hint {
     font-size: 12px;
     color: var(--text-muted);
@@ -579,20 +580,20 @@ const questions = [
   },
   {
     block: "Conviction",
-    question: "When you look at how most people in your space operate...",
+    question: "When it comes to your market, you...",
     options: [
-      { text: "The approach is mostly sound — the challenge is doing it well.", score: 0 },
-      { text: "It’s competent but predictable — better approaches exist.", score: 1 },
-      { text: "Something is fundamentally wrong — and most people don’t see it.", score: 2 }
+      { text: "Follow the established playbook — it works well enough.", score: 0 },
+      { text: "See room for improvement — better methods, sharper execution.", score: 1 },
+      { text: "Hold a conviction about where this market needs to go that most of your peers haven’t arrived at yet.", score: 2 }
     ]
   },
   {
     block: "Conviction",
-    question: "When it comes to disagreeing publicly with the most established voice in your space...",
+    question: "The idea you keep coming back to in your work...",
     options: [
-      { text: "You’d rather not — they’ve earned their reputation.", score: 0 },
-      { text: "You disagree on specific points, not on the fundamentals.", score: 1 },
-      { text: "You already do — and the disagreement is precise, not performative.", score: 2 }
+      { text: "Is well-established — you apply what’s proven.", score: 0 },
+      { text: "Builds on existing thinking — you’ve refined what others started.", score: 1 },
+      { text: "Is genuinely new — a perspective that didn’t exist in your market before you articulated it.", score: 2 }
     ]
   },
   {
@@ -610,7 +611,7 @@ const questions = [
     options: [
       { text: "“That makes sense — pretty standard approach.”", score: 0 },
       { text: "“That’s smart — I wouldn’t have thought of that.”", score: 1 },
-      { text: "“That’s... unusual. But I can see why it works for you.”", score: 2 }
+      { text: "“I’ve never seen anyone approach it that way — that opens up something entirely new.”", score: 2 }
     ]
   },
   {
@@ -653,9 +654,17 @@ const questions = [
 
 const blockOrder = ["Distinction", "Conviction", "Obsession", "Economics", "Market"];
 
+const blockDescriptions = {
+  Distinction: "How irreplaceable is what you bring?",
+  Conviction: "Do you hold a perspective that drives change in your market?",
+  Obsession: "Is there a genuine drive behind what you do — a problem that won’t let go of you?",
+  Economics: "Does your business model carry the weight of your thinking?",
+  Market: "Does your market have the pressure and budget for what you see?"
+};
+
 const blockReflections = {
   Distinction: "What do you bring that no one else could replicate — even with the same skills and experience?",
-  Conviction: "What does your market get fundamentally wrong — and what would it look like to build a business around that belief?",
+  Conviction: "What conviction do you hold about where your market needs to go — one that most of your peers haven’t arrived at yet?",
   Obsession: "What’s the one problem you’d work on even if no one paid you? And is your business built around it?",
   Economics: "Does your pricing reflect how you think — or just how long it takes? And does each year build on the last, or start from scratch?",
   Market: "Is there enough pressure, urgency, and budget in your market for what you see — or are you ahead of the demand?"
@@ -886,7 +895,8 @@ function showResult() {
 
     const div = document.createElement('div');
     div.className = 'category';
-    div.innerHTML = '<div class="category-header"><span class="category-name">' + block + '</span><span class="category-score">' + s + '/' + m + '</span></div><div class="category-bar"><div class="category-fill" style="width:0%;background:' + barColor + '"></div></div><div class="category-hint">' + hint + '</div>';
+    var desc = blockDescriptions[block] || '';
+    div.innerHTML = '<div class="category-header"><span class="category-name">' + block + '</span><span class="category-score">' + s + '/' + m + '</span></div><div class="category-desc">' + desc + '</div><div class="category-bar"><div class="category-fill" style="width:0%;background:' + barColor + '"></div></div><div class="category-hint">' + hint + '</div>';
     catList.appendChild(div);
 
     setTimeout(() => {
